@@ -3,17 +3,18 @@ vim9script
 const comment_string = '# '
 # Comment out the current line in Python
 export def ToggleComment()
-  var i = indent('.') # Number of spaces
-  var line = getline('.')
-  var cur_row = getcurpos()[1]
-  var cur_col = getcurpos()[2]
-  var cur_offset = 0
-  if line[i : i + len(comment_string) - 1] ==# comment_string
-    setline('.', line[ : i - 1] .. line[i + len(comment_string) : ])
+  const i = indent('.') # Number of spaces
+  const line = getline('.')
+  const cur_row = getcurpos()[1]
+  const cur_col = getcurpos()[2]
+  const prefix = i > 0 ? line[: i - 1] : '' # Handle 0 indent
+  const has_commented = line[i : i + len(comment_string) - 1] ==# comment_string
+  if has_commented
+    setline('.', prefix .. line[i + len(comment_string) : ])
   else
-    setline('.', line[ : i - 1] .. comment_string .. line[i : ])
-    cur_offset = len(comment_string)
+    setline('.', prefix .. comment_string .. line[i : ])
   endif
+  const cur_offset = has_commented ? 0 : len(comment_string)
   cursor(cur_row, cur_col + cur_offset)
 enddef
 nnoremap gc = <ScriptCmd>ToggleComment()<cr>
