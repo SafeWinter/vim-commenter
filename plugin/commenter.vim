@@ -1,7 +1,9 @@
-" Comment out the current line in Python
-function! commenter#Comment()
-    let l:line = getline('.')
-    call setline('.', '# ' . l:line)
-endfunction
-nnoremap gc :call commenter#Comment()<cr>
+vim9script
+
+# Comment out the current line in Python
+export def Comment()
+  var line = getline('.')
+  setline('.', '# ' .. line)
+enddef
+nnoremap gc = <ScriptCmd>Comment()<cr>
 
